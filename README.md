@@ -29,4 +29,9 @@
     ```
 
 3. Create your new EnvironmentConfigProvider in the project folder
-![Image depicting how to create the EnviromentConfigProvider](Documentation%20Images~%2Fcreateenvconfigprovider.png)
+
+    ![Image depicting how to create the EnviromentConfigProvider](Documentation%20Images~%2Fcreateenvconfigprovider.png)
+
+4. Setup your Features and Environments 
+
+    ![Image depicting how the EnvironmentConfigProvider looks like in the inspector](Documentation%20Images~%2Fexampleenvconfigproviderinspector.png)
