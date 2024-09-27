@@ -1,12 +1,16 @@
 # What is envconfigs package?
-TODO: Description of the package...
+The basic idea behind this package is to allow users to have multiple environment configurations and switch between them quickly and easialy.
+
+For example, one might want to have a `local` vs `remote` environment configuration that specifies the URL or an API to be something different for each environment or a way to toggle features on and off, like cheats, based on if the build is being made for a `dev` or `prod` environment.
+
+## Important pieces of this package
 
 ### Features
 Features allow the user to specify a collection of Scripting Define Symbols that should be enabled or disabled together. This allows for quickly enabling and disabling certain features of a project. 
 
-For example, one might have all the code related to cheats used by the developer surrounded with an #if ENABLE_CHEATS define symbol. 
+For example, one might have all code related to cheats surrounded with `#if ENABLE_CHEATS` define symbol. 
 
-The user can create a Feature called Cheats which list the ENABLE_CHEATS define symbol so that it may be toggled on and off based on the enviornment config.
+The user can create a `Feature` called `Cheats` which contains the `ENABLE_CHEATS` define symbol so that it may be toggled on and off based on the enviornment config.
 
 ### Feature Flags
 A feature flag is a C# attribute that can be added to a boolean field to be used as a way to toggle a specific feature On or Off.
@@ -17,8 +21,10 @@ For example, one might add a bool field to their environment config to togle the
 [SerializeField] private bool m_IsCheatsFeatureEnabled;
 ```
 
-### Active Enviroment
+### Enviroment Configs
 The user can quickly switch between their environment configs using the inspector after selecting the environment config provider. 
+
+![Image depicting how a user can switch environments via the insepctor](Documentation%20Images~%2Fswitchenvinspector.png)
 
 # Sample Usage
 
@@ -54,3 +60,5 @@ The user can quickly switch between their environment configs using the inspecto
 4. Setup your Features and Environments 
 
     ![Image depicting how the EnvironmentConfigProvider looks like in the inspector](Documentation%20Images~%2Fexampleenvconfigproviderinspector.png)
+
+5. Apply your changes
