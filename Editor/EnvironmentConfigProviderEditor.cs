@@ -4,39 +4,40 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(EnvironmentConfigProvider), true)]
-public class EnvironmentConfigProviderEditor : Editor
+public sealed class EnvironmentConfigProviderEditor : Editor
 {
     private EnvironmentConfigProvider m_ConfigProvider;
     private SerializedProperty m_ActiveEnvironmentIndexProperty;
     private SerializedProperty m_EnvironmentsProperty;
+    private SerializedProperty m_IsDirtyProperty;
     
     private void OnEnable()
     {
         m_ConfigProvider = (EnvironmentConfigProvider)target;
         m_ActiveEnvironmentIndexProperty = serializedObject.FindProperty("m_ActiveEnvironmentIndex");
         m_EnvironmentsProperty = serializedObject.FindProperty("m_EnvironmentConfigs");
+        m_IsDirtyProperty = serializedObject.FindProperty("m_IsDirty");
     }
 
     public override void OnInspectorGUI()
     {
+        EditorGUI.BeginChangeCheck();
         base.OnInspectorGUI();
 
         var prevActiveEnvironmentIndex = m_ActiveEnvironmentIndexProperty.intValue;
         var displayOptions = GetEnvironmentConfigNames().ToArray();
         var currActiveEnvironmentIndex = EditorGUILayout.Popup("Active Environment", prevActiveEnvironmentIndex, displayOptions);
         m_ActiveEnvironmentIndexProperty.intValue = currActiveEnvironmentIndex;
+        var changed = EditorGUI.EndChangeCheck();
+        
+        m_IsDirtyProperty.boolValue |= changed;
         serializedObject.ApplyModifiedProperties();
-
-        if (currActiveEnvironmentIndex != prevActiveEnvironmentIndex)
-        {
-            EditorUtility.SetDirty(m_ConfigProvider);
-        }
-
-        var isDirty = EditorUtility.IsDirty(m_ConfigProvider);
+        
+        var isDirty =  m_IsDirtyProperty.boolValue;
         EditorGUI.BeginDisabledGroup(!isDirty);
-        if (GUILayout.Button("Save"))
+        if (GUILayout.Button("Apply"))
         {
-            m_ConfigProvider.SaveChanges();
+            m_ConfigProvider.ApplyChanges();
         }
         EditorGUI.EndDisabledGroup();
     }

@@ -11,18 +11,23 @@ using UnityEditor.Build;
 
 public abstract class EnvironmentConfigProvider : ScriptableObject
 {
-    public abstract void SaveChanges();
+    public abstract void ApplyChanges();
 }
 
-public abstract class EnvironmentConfigProvider<T> : EnvironmentConfigProvider where T : EnvironmentConfig
+public abstract class EnvironmentConfigProvider<T> : EnvironmentConfigProvider
+    where T : EnvironmentConfig
 {
     [SerializeField] private Feature[] m_Features;
     [SerializeField] private T[] m_EnvironmentConfigs;
     [HideInInspector][SerializeField] private int m_ActiveEnvironmentIndex;
     
-    protected T ActiveEnvironment => m_EnvironmentConfigs[m_ActiveEnvironmentIndex];
+    private T ActiveEnvironment => m_EnvironmentConfigs[m_ActiveEnvironmentIndex];
     
 #if UNITY_EDITOR
+    
+#pragma warning disable CS0414 // Used by EnvironmentConfigProviderEditor.cs script
+    [HideInInspector][SerializeField] private bool m_IsDirty;
+#pragma warning restore CS0414
     
     public int ChangeActiveEnvironment(int activeEnvironmentIndex)
     {
@@ -35,14 +40,15 @@ public abstract class EnvironmentConfigProvider<T> : EnvironmentConfigProvider w
             return prevActiveEnvironmentIndex;
 
         m_ActiveEnvironmentIndex = activeEnvironmentIndex;
-        SaveChanges();
+        ApplyChanges();
         return prevActiveEnvironmentIndex;
     }
 
-    public override void SaveChanges()
+    public override void ApplyChanges()
     {
-        var activeEnvironment = m_EnvironmentConfigs[m_ActiveEnvironmentIndex];
-        Apply(activeEnvironment);
+        var activeEnvironment = ActiveEnvironment;
+        Apply(m_Features, activeEnvironment);
+        m_IsDirty = false;
         
         // There seems to be a possibility of this happening
         if (this == null) 
@@ -52,11 +58,11 @@ public abstract class EnvironmentConfigProvider<T> : EnvironmentConfigProvider w
         AssetDatabase.SaveAssetIfDirty(this);
     }
 
-    protected virtual void Apply(T environmentConfig)
+    protected virtual void Apply(Feature[] features, T environmentConfig)
     {
         var featureFlags = ExtractFeatureFlags(environmentConfig);
-        UpdateFeatures(m_Features, featureFlags);
-        UpdateScriptDefineSymbols();
+        UpdateFeatures(features, featureFlags);
+        UpdateScriptDefineSymbols(features);
         Debug.Log($"<b>{environmentConfig.Name}</b> config applied");
     }
 
@@ -91,13 +97,13 @@ public abstract class EnvironmentConfigProvider<T> : EnvironmentConfigProvider w
         return featureFlags;
     }
     
-    private void UpdateScriptDefineSymbols()
+    private void UpdateScriptDefineSymbols(IEnumerable<Feature> features)
     {
         BuildTargetGroup buildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
         var buildTarget = NamedBuildTarget.FromBuildTargetGroup(buildTargetGroup);
         var scriptingDefineSymbolsAsText = PlayerSettings.GetScriptingDefineSymbols(buildTarget);
         var scriptingDefineSymbols = new HashSet<string>(scriptingDefineSymbolsAsText.Split(';', StringSplitOptions.RemoveEmptyEntries));
-        foreach (var feature in m_Features)
+        foreach (var feature in features)
             feature.UpdateScriptDefineSymbols(scriptingDefineSymbols);
 
         var sb = new StringBuilder();
@@ -118,6 +124,11 @@ public abstract class EnvironmentConfigProvider<T> : EnvironmentConfigProvider w
             Debug.Log($"Updating Scripting Define Symbols...\nNew <b>{updatedScriptingDefineSymbolsAsText}</b>\nOld <b>{scriptingDefineSymbolsAsText}</b>");
             PlayerSettings.SetScriptingDefineSymbols(buildTarget, updatedScriptingDefineSymbolsAsText);
         }
+    }
+
+    private void OnValidate()
+    {
+        //m_IsDirty = true;
     }
     
 #endif

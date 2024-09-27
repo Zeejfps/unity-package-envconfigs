@@ -21,12 +21,12 @@ public sealed class Feature
 
     public void UpdateScriptDefineSymbols(HashSet<string> symbols)
     {
-        foreach (var prevScriptDefineSymbol in m_PrevScriptDefineSymbols)
+        foreach (var symbol in m_PrevScriptDefineSymbols)
         {
-            symbols.Remove(prevScriptDefineSymbol);
+            symbols.Remove(symbol);
         }
         m_PrevScriptDefineSymbols.Clear();
-        m_PrevScriptDefineSymbols.AddRange(symbols);
+        m_PrevScriptDefineSymbols.AddRange(m_ScriptDefineSymbols);
         
         if (m_IsEnabled)
         {
