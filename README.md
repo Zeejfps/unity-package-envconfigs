@@ -63,8 +63,10 @@ The user can quickly switch between their environment configs using the inspecto
     ![Image depicting how the EnvironmentConfigProvider looks like in the inspector](Documentation%20Images~%2Fexampleenvconfigproviderinspector.png)
 
 5. Apply your changes
+    
+# Advanced Usage
 
-### Advanced Usage
+### Changed Environment via Code
 You can externally modify the active environment via code. 
 
 For example, one might wan to change the environment being used via some Build Script, or Pre-Export method.
@@ -88,3 +90,13 @@ private static void BuildClientForWebGL(string buildPath, int environmentIndex)
 ```
 
 One thing to note, however, this is an Editor only method, and should only be called inside an Editor assembly.
+
+### Overrding Apply
+You can override the Apply method which handles updating the features and updating the scripting defining symbols. Here you can dynamicallinject your own code or add features dynamically or make changes to the environment config. 
+
+```CS
+protected override void Apply(Feature[] features, ExampleEnvironmentConfig environmentConfig)
+{
+    base.Apply(features, environmentConfig);
+}
+```
