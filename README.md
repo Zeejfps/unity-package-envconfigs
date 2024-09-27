@@ -15,9 +15,10 @@ The user can create a `Feature` called `Cheats` which contains the `ENABLE_CHEAT
 ### Feature Flags
 A feature flag is a C# attribute that can be added to a boolean field to be used as a way to toggle a specific feature On or Off.
 
-For example, one might add a bool field to their environment config to togle the above cheat feature like so:
+For example, one might add a bool field to their environment config to toggle the Cheat feature like so:
 ```CS
-[FeatureFlag("Cheats")]
+// The name 'Cheats' has to match the feature name
+[FeatureFlag("Cheats")] 
 [SerializeField] private bool m_IsCheatsFeatureEnabled;
 ```
 
