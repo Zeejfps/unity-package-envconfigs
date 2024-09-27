@@ -92,7 +92,7 @@ private static void BuildClientForWebGL(string buildPath, int environmentIndex)
 One thing to note, however, this is an Editor only method, and should only be called inside an Editor assembly.
 
 ### Overrding Apply
-You can override the Apply method which handles updating the features and updating the scripting defining symbols. Here you can dynamicallinject your own code or add features dynamically or make changes to the environment config. 
+You can override the Apply method inside your EnvironmentConfigProvider class which handles updating the features and updating the scripting defining symbols. Here you can dynamicallinject your own code or add features dynamically or make changes to the environment config.
 
 ```CS
 protected override void Apply(Feature[] features, ExampleEnvironmentConfig environmentConfig)
@@ -100,3 +100,4 @@ protected override void Apply(Feature[] features, ExampleEnvironmentConfig envir
     base.Apply(features, environmentConfig);
 }
 ```
+
