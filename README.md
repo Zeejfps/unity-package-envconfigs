@@ -23,9 +23,10 @@
     ```CS
     [CreateAssetMenu]
     public sealed class ExampleEnvironmentConfigProvider : EnvironmentConfigProvider<ExampleEnvironmentConfig>
-    {
-        
+    {    
+
     }
     ```
 
 3. Create your new EnvironmentConfigProvider in the project folder
+![Image depicting how to create the EnviromentConfigProvider](Documentation%20Images~%2Fcreateenvconfigprovider.png)
