@@ -2,7 +2,7 @@
     "name": "com.evasilyev.envconfigs",
     "version": "1.0.0",
     "displayName": "Environment Configs",
-    "description": "This is an example package",
+    "description": "Packaged used to switch environment configs quickly and easialy.",
     "unity": "2022.3",
     "unityRelease": "44f1",
     "documentationUrl": "https://github.com/Zeejfps/unity-package-envconfigs",
