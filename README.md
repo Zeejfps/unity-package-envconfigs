@@ -77,13 +77,13 @@ private static ApplicationConfig GetApplicationConfig()
 }
 
 private static void BuildClientForWebGL(string buildPath, int environmentIndex)
-    {
-        ApplicationConfig applicationConfig = GetApplicationConfig();
-        int prevEnvironmentIndex = applicationConfig.ChangeActiveEnvironment(environmentIndex);
+{
+    ApplicationConfig applicationConfig = GetApplicationConfig();
+    int prevEnvironmentIndex = applicationConfig.ChangeActiveEnvironment(environmentIndex);
 
-        BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, buildPath, BuildTarget.WebGL, BuildOptions.None);
+    BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, buildPath, BuildTarget.WebGL, BuildOptions.None);
 
-        applicationConfig.ChangeActiveEnvironment(prevEnvironmentIndex);
+    applicationConfig.ChangeActiveEnvironment(prevEnvironmentIndex);
 }
 ```
 
