@@ -27,7 +27,7 @@ The user can quickly switch between their environment configs using the inspecto
 
 ![Image depicting how a user can switch environments via the insepctor](Documentation%20Images~%2Fswitchenvinspector.png)
 
-# Sample Usage
+# Simple Usage
 
 1. Create a class that extends `EnvironmentConfig` 
     ```CS 
@@ -63,3 +63,28 @@ The user can quickly switch between their environment configs using the inspecto
     ![Image depicting how the EnvironmentConfigProvider looks like in the inspector](Documentation%20Images~%2Fexampleenvconfigproviderinspector.png)
 
 5. Apply your changes
+
+### Advanced Usage
+You can externally modify the active environment via code. 
+
+For example, one might wan to change the environment being used via some Build Script, or Pre-Export method.
+
+This can be done by loading the asset using `AssetDatabase` then invoking the `ChangeActiveEnvironment(int index)` method like so:
+```CS
+private static ApplicationConfig GetApplicationConfig()
+{
+    return AssetDatabase.LoadAssetAtPath<ApplicationConfig>("Assets/Configs/Application Config.asset");
+}
+
+private static void BuildClientForWebGL(string buildPath, int environmentIndex)
+    {
+        ApplicationConfig applicationConfig = GetApplicationConfig();
+        int prevEnvironmentIndex = applicationConfig.ChangeActiveEnvironment(environmentIndex);
+
+        BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, buildPath, BuildTarget.WebGL, BuildOptions.None);
+
+        applicationConfig.ChangeActiveEnvironment(prevEnvironmentIndex);
+}
+```
+
+One thing to note, however, this is an Editor only method, and should only be called inside an Editor assembly.
