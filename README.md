@@ -1,7 +1,7 @@
 # What is envconfigs package?
 The basic idea behind this package is to allow users to have multiple environment configurations and switch between them quickly and easialy.
 
-For example, one might want to have a `local` vs `remote` environment configuration that specifies the URL or an API to be something different for each environment or a way to toggle features on and off, like cheats, based on if the build is being made for a `dev` or `prod` environment.
+For example, one might want to have a `local` vs `remote` environment configuration that specifies the URL of an API to be something different for each environment. Moreover, one might want a way to toggle `features` on and off, like cheats, based on if the build is being made for a `dev` or `prod` environment.
 
 ## Important pieces of this package
 
