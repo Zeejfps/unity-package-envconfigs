@@ -104,4 +104,3 @@ protected override void Apply(Feature[] features, ExampleEnvironmentConfig envir
     base.Apply(features, environmentConfig);
 }
 ```
-
