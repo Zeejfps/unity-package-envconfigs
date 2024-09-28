@@ -35,14 +35,18 @@ The user can quickly switch between their environment configs using the inspecto
     public sealed class ExampleEnvironmentConfig : EnvironmentConfig
     {
         [SerializeField] private float m_ExampleFloatField;
-        [SerializeField] private string m_ExapleStringField;
+        [SerializeField] private string m_ExampleStringField;
         [SerializeField] private bool m_ExampleBoolField;
-        
+            
         [FeatureFlag("Feature1")]
         [SerializeField] private bool m_ExampleFeature1Flag;
-        
+            
         [FeatureFlag("Feature2")]
         [SerializeField] private bool m_ExampleFeature2Flag;
+
+        public float ExampleFloatField => m_ExampleFloatField;
+        public string ExampleStringField => m_ExampleStringField;
+        public bool ExampleBoolField => m_ExampleBoolField;
     }
     ```
 2. Create a class that extends `EnvironemntConfigProvider<T>`
@@ -50,7 +54,7 @@ The user can quickly switch between their environment configs using the inspecto
     [CreateAssetMenu]
     public sealed class ExampleEnvironmentConfigProvider : EnvironmentConfigProvider<ExampleEnvironmentConfig>
     {    
-
+        public float ExampleFloatField => ActiveEnvironment.ExampleFloatField;
     }
     ```
 
@@ -73,26 +77,26 @@ For example, one might wan to change the environment being used via some Build S
 
 This can be done by loading the asset using `AssetDatabase` then invoking the `ChangeActiveEnvironment(int index)` method like so:
 ```CS
-private static ApplicationConfig GetApplicationConfig()
+private static ExampleEnvironmentConfigProvider GetEnvConfigProvider()
 {
-    return AssetDatabase.LoadAssetAtPath<ApplicationConfig>("Assets/Configs/Application Config.asset");
+    return AssetDatabase.LoadAssetAtPath<ExampleEnvironmentConfigProvider>("Assets/Configs/Enironment Config Provider.asset");
 }
 
 private static void BuildClientForWebGL(string buildPath, int environmentIndex)
 {
-    ApplicationConfig applicationConfig = GetApplicationConfig();
-    int prevEnvironmentIndex = applicationConfig.ChangeActiveEnvironment(environmentIndex);
+    ExampleEnvironmentConfigProvider environmentConfigProvider = GetEnvConfigProvider();
+    int prevEnvironmentIndex = environmentConfigProvider.ChangeActiveEnvironment(environmentIndex);
 
     BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, buildPath, BuildTarget.WebGL, BuildOptions.None);
 
-    applicationConfig.ChangeActiveEnvironment(prevEnvironmentIndex);
+    environmentConfigProvider.ChangeActiveEnvironment(prevEnvironmentIndex);
 }
 ```
 
 One thing to note, however, this is an Editor only method, and should only be called inside an Editor assembly.
 
-### Overrding Apply
-You can override the Apply method inside your EnvironmentConfigProvider class which handles updating the features and updating the scripting defining symbols. Here you can dynamicallinject your own code or add features dynamically or make changes to the environment config.
+### Overriding Apply
+You can override the Apply method inside your EnvironmentConfigProvider class which handles updating the features and updating the scripting defining symbols. Here you can dynamically inject your own code, add features, or make changes to the environment config.
 
 ```CS
 protected override void Apply(Feature[] features, ExampleEnvironmentConfig environmentConfig)
